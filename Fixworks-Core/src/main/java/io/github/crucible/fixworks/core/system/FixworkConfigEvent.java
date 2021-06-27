@@ -7,6 +7,13 @@ import io.github.crucible.grimoire.common.api.mixin.ConfigurationType;
 import io.github.crucible.grimoire.common.api.mixin.IMixinConfiguration;
 import io.github.crucible.grimoire.common.api.mixin.IMixinConfigurationBuilder;
 
+/**
+ * Wraps around {@link IConfigBuildingEvent}, providing module-specific helping methods
+ * when building runtime mixin configurations.
+ *
+ * @author Aizistral
+ */
+
 public class FixworkConfigEvent {
     private final IConfigBuildingEvent event;
     private final String fixworkID;
