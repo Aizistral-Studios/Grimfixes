@@ -12,10 +12,10 @@ import java.lang.annotation.Target;
 public @interface Fixwork {
 
     public static final String DEFAULT_ID = "unknown";
-    public static final String DEFAULT_DESC = "No description";
+    public static final String DEFAULT_DESC = "No description.";
     public static final String[] DEFAULT_DEPS = new String[0];
     public static final long DEFAULT_PRIORITY = 0L;
-    public static final boolean DEFAULT_ENABLED = false;
+    public static final boolean DEFAULT_ENABLED = true;
 
     public String id() default DEFAULT_ID;
 

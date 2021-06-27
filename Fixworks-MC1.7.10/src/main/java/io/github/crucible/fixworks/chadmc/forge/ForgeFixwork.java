@@ -5,7 +5,7 @@ import io.github.crucible.fixworks.core.system.FixworkConfigEvent;
 import io.github.crucible.fixworks.core.system.FixworkController;
 import io.github.crucible.grimoire.common.api.mixin.ConfigurationType;
 
-@Fixwork(id = "Forge", priority = 40000L)
+@Fixwork(id = "Forge", priority = 40000L, defaultEnabled = true)
 public class ForgeFixwork extends FixworkController {
 
     @Override

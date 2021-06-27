@@ -13,10 +13,9 @@ public class FixworksHandler {
     @SubscribeCoreEvent
     public static void onConfigurationLoad(MixinConfigLoadEvent event) {
         event.getOwner().ifPresent(owner -> {
-            if (owner == FixworksCore.getInstance()) {
+            if (owner == FixworksCore.getInstance().getGrimmix()) {
                 IMixinConfiguration config = event.getConfiguration();
                 FixworkContainer container = FixworksCore.getInstance().seekOwner(config);
-
                 if (container != null && !container.validate()) {
                     FixworksCore.logger.info("Canceling load of configuration {}, since its conditions are not satisfied.", config.getClasspath());
                     event.setCanceled(true);

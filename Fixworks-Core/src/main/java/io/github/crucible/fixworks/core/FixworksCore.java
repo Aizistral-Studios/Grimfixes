@@ -48,7 +48,7 @@ public class FixworksCore extends GrimmixController {
 
     private static final String CHADMC_MODULES_PATH = CHADMC_MODULES_PACKAGE.replace(".", "/");
     private static final String INCELMC_MODULES_PATH = INCELMC_MODULES_PACKAGE.replace(".", "/");
-    protected static final Logger logger = LogManager.getLogger("Fixworks");
+    public static final Logger logger = LogManager.getLogger("Fixworks");
 
     private static FixworksCore instance = null;
 
@@ -88,12 +88,20 @@ public class FixworksCore extends GrimmixController {
 
             logger.info("Total of {} modules were located. The list goes as following:", this.fixworks.size());
             this.fixworks.forEach(fix -> logger.info("Module: {}", fix.getID()));
+
+            this.fixworks.removeIf(fix -> {
+                boolean remove = !builder.getBoolean(fix.getID(), fix.isDefaultEnabled())
+                        .comment(fix.getDescription() + (fix.hasDependencies() ? " " + fix.depsDesc() : ""))
+                        .build().getValue();
+
+                if (remove) {
+                    logger.info("Module {} is disabled in config, dropping it...", fix.getID());
+                }
+
+                return remove;
+            });
+
             this.fixworks.forEach(fix -> fix.construct());
-
-            this.fixworks.removeIf(fix -> builder.getBoolean(fix.getID(), fix.isDefaultEnabled())
-                    .comment(fix.getDescription() + (fix.hasDependencies() ? " " + fix.depsDesc() : ""))
-                    .build().getValue());
-
             this.fixworks.forEach(fix -> fix.verifyDependencies());
 
             builder.popCategory();
@@ -226,6 +234,10 @@ public class FixworksCore extends GrimmixController {
         }
 
         return null;
+    }
+
+    public IGrimmix getGrimmix() {
+        return this.grimmix;
     }
 
     public static FixworksCore getInstance() {

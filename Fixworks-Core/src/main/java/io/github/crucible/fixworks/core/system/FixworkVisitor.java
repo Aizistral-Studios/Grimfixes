@@ -3,6 +3,8 @@ package io.github.crucible.fixworks.core.system;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.InputStream;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.zip.ZipEntry;
 import java.util.zip.ZipFile;
 
@@ -22,9 +24,10 @@ public class FixworkVisitor extends ClassVisitor {
     private String fixworkDesc = Fixwork.DEFAULT_DESC;
     private String validatorClass = null;
     private String incompatibleClass = null;
-    private String[] dependencies = Fixwork.DEFAULT_DEPS;
     private long priority = Fixwork.DEFAULT_PRIORITY;
     private boolean defaultEnabled = Fixwork.DEFAULT_ENABLED;
+
+    private final List<String> dependencies = new ArrayList<>();
 
     public FixworkVisitor() {
         super(Opcodes.ASM4);
@@ -62,7 +65,7 @@ public class FixworkVisitor extends ClassVisitor {
         return this.defaultEnabled;
     }
 
-    public String[] getDependencies() {
+    public List<String> getDependencies() {
         return this.dependencies;
     }
 
@@ -98,6 +101,14 @@ public class FixworkVisitor extends ClassVisitor {
             this.annoType = annoType;
         }
 
+        @Override
+        public AnnotationVisitor visitArray(String name) {
+            if ("depends".equals(name))
+                return this;
+            else
+                return super.visitArray(name);
+        }
+
         /**
          * @see {@link Fixwork#id()}, {@link Fixwork#priority()}, {@link Fixwork#desc()},
          * {@link ValidatorClass#value()}, {@link IncompatibleClass#value()}
@@ -105,6 +116,7 @@ public class FixworkVisitor extends ClassVisitor {
         @Override
         public void visit(String name, Object value) {
             if (this.annoType == 0) {
+                System.out.println("Name: " + name + ", value: " + value);
                 if ("id".equals(name)) {
                     this.supervisitor.fixworkID = String.valueOf(value);
                 } else if ("priority".equals(name)) {
@@ -113,15 +125,15 @@ public class FixworkVisitor extends ClassVisitor {
                     this.supervisitor.fixworkDesc = String.valueOf(name);
                 } else if ("defaultEnabled".equals(name)) {
                     this.supervisitor.defaultEnabled = (boolean) value;
-                } else if ("depends".equals(name)) {
-                    this.supervisitor.dependencies = (String[]) value;
+                } else if (name == null && value instanceof String) {
+                    this.supervisitor.dependencies.add((String) value);
                 }
             } else if (this.annoType == 1) {
-                if ("value".equals("name")) {
+                if ("value".equals(name)) {
                     this.supervisitor.validatorClass = String.valueOf(value);
                 }
             } else if (this.annoType == 2) {
-                if ("value".equals("name")) {
+                if ("value".equals(name)) {
                     this.supervisitor.incompatibleClass = String.valueOf(value);
                 }
             }

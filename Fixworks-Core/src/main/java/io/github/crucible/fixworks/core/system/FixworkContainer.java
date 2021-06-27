@@ -7,6 +7,7 @@ import java.util.List;
 import java.util.stream.Collectors;
 
 import com.google.common.base.Throwables;
+import com.google.common.collect.ImmutableList;
 
 import io.github.crucible.fixworks.core.FixworksCore;
 import io.github.crucible.grimoire.common.api.GrimoireAPI;
@@ -19,7 +20,7 @@ public class FixworkContainer implements IFixValidator, Comparable<FixworkContai
     private final List<IMixinConfiguration> ownedConfigurations = new ArrayList<>();
     private final long priority;
     private final boolean defaultEnabled;
-    private final String[] dependendencies;
+    private final ImmutableList<String> dependendencies;
 
     private FixworkController controller = null;
     private Boolean valid = null;
@@ -32,7 +33,7 @@ public class FixworkContainer implements IFixValidator, Comparable<FixworkContai
         this.incompatibleClass = visitor.getIncompatibleClass();
         this.desc = visitor.getFixworkDesc();
         this.defaultEnabled = visitor.isDefaultEnabled();
-        this.dependendencies = visitor.getDependencies();
+        this.dependendencies = new ImmutableList.Builder<String>().addAll(visitor.getDependencies()).build();
 
         this.pkg = pkg;
     }
@@ -128,11 +129,11 @@ public class FixworkContainer implements IFixValidator, Comparable<FixworkContai
     }
 
     public boolean hasDependencies() {
-        return this.dependendencies != null && this.dependendencies.length > 0;
+        return this.dependendencies != null && this.dependendencies.size() > 0;
     }
 
     public String depsDesc() {
-        return "Dependencies: " + Arrays.asList(this.dependendencies).stream().collect(Collectors.joining(", "));
+        return "Dependencies: " + this.dependendencies.stream().collect(Collectors.joining(", "));
     }
 
     public void verifyDependencies() {
