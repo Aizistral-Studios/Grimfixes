@@ -1,0 +1,44 @@
+apply plugin: 'java'
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+repositories {
+    maven {
+        name = 'spongepowered-repo'
+        url = 'https://repo.spongepowered.org/repository/maven-public/'
+    }
+    maven {
+        name = "github"
+		url = "https://github.com/juanmuscaria/maven/raw/master"
+    }
+}
+
+dependencies {
+    implementation("io.github.crucible.grimoire:Grimoire-mc1.7.10-api:+")
+    implementation("org.apache.logging.log4j:log4j-api:2.0-beta9")
+    implementation("commons-codec:commons-codec:1.9")
+    implementation('org.jetbrains:annotations:20.1.0')
+    implementation('com.google.guava:guava:17.0')
+
+    compile('net.minecraft:launchwrapper:1.11') {
+        exclude module: 'lwjgl'
+    }
+}
+
+task deleteSource(type: Delete) {
+	delete "$buildDir/src"
+}
+
+task processSource(type: Sync) {
+    from sourceSets.main.java
+    inputs.property 'version', version
+    filter(org.apache.tools.ant.filters.ReplaceTokens, tokens: [VERSION: project.version, MIXIN_REFMAP: project.mixinRefmapName])
+    into "$buildDir/src"
+}
+
+compileJava {
+    source = processSource.outputs
+}
+
+compileJava.finalizedBy deleteSource

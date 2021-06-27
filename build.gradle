@@ -1,0 +1,7 @@
+subprojects {
+    // Basic project configuration
+    apply plugin: 'idea'
+    apply plugin: 'eclipse'
+    group = 'io.github.crucible.fixworks'
+    version = '1.0.0'
+}

@@ -1,0 +1,19 @@
+[
+  {
+    "modid": "fixworks",
+    "name": "Fixworks",
+    "description": "A set of configurable lightweight patches that rectify some long-standing issues in common mods.",
+    "version": "${version}",
+    "mcversion": "${mcversion}",
+    "url": "https://github.com/CrucibleMC/Grimoire",
+    "updateUrl": "",
+    "authorList": [
+      "CrucibleMC Team",
+      "Aizistral"
+    ],
+    "credits": "",
+    "logoFile": "",
+    "screenshots": [],
+    "dependencies": []
+  }
+]

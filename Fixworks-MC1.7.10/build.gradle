@@ -1,0 +1,100 @@
+buildscript {
+    repositories {
+        mavenCentral()
+        mavenLocal()
+        jcenter()
+        maven {
+            name = "forge"
+            url = "https://maven.minecraftforge.net/"
+        }
+        maven {
+            name = "sonatype"
+            url = "https://oss.sonatype.org/content/repositories/snapshots/"
+        }
+        maven {
+            name = "github"
+            url = "https://github.com/juanmuscaria/maven/raw/master"
+        }
+    }
+    dependencies {
+        classpath 'net.minecraftforge.gradle:ForgeGradle:1.2-1.4.0-SNAPSHOT'
+		classpath 'com.integral.grimoire:GrimoireShenanigans:[1.2.3,)'
+    }
+}
+
+plugins {
+	id "com.jfrog.bintray" version "1.8.4"
+}
+
+apply plugin: 'forge'
+apply from: '../artifacts.gradle'
+apply from: '../publish.gradle'
+apply plugin: 'grimoire-shenanigans'
+project.evaluationDependsOn(":Fixworks-Core")
+
+sourceCompatibility = targetCompatibility = compileJava.sourceCompatibility = compileJava.targetCompatibility = '1.8'
+[compileJava, compileTestJava]*.options*.encoding = 'UTF-8'
+
+archivesBaseName = project.name
+
+minecraft {
+    version = "1.7.10-10.13.4.1614-1.7.10"
+    runDir = "minecraft"
+}
+
+repositories {
+	flatDir {
+		dirs 'deps'
+	}
+}
+
+dependencies {
+	implementation(project(':Fixworks-Core'))
+	implementation('org.jetbrains:annotations:20.1.0')
+	compile name: 'Armourers-Workshop-1.7.10-0.48.2-dev'
+	compile name: 'Avaritia-1.13-dev'
+	compile name: 'Baubles-1.7.10-1.0.1.10-dev'
+	compile name: 'Thaumcraft-1.7.10-4.2.3.5-dev'
+	compile name: 'Better_Furnaces_V4.3-dev'
+	compile name: 'Botania-r1.8-249-dev'
+	compile name: 'appliedenergistics2-rv3-beta-6-dev'
+	compile name: 'BrandonsCore-1.0.0.12-dev'
+	compile name: 'Carpenters-Blocks-3.3.8.1-dev'
+	compile name: 'CodeChickenCore-1.7.10-1.0.7.47-dev'
+	compile name: 'CodeChickenLib-1.7.10-1.1.3.140-dev'
+	compile name: 'CoFHCore-[1.7.10]3.1.4-329-dev'
+	compile name: 'Draconic-Evolution-1.7.10-1.0.2h-dev'
+	compile name: 'EnderCore-1.7.10-0.2.0.39_beta-dev'
+	compile name: 'EnderIO-1.7.10-2.3.0.429_beta-dev'
+	compile name: 'extrautilities-1.2.12-dev'
+	compile name: 'Mekanism-1.7.10-9.1.0.281-dev'
+	compile name: 'MineFactoryReloaded-[1.7.10]2.8.2B1-201-dev'
+	compile name: 'NotEnoughItems-1.7.10-1.0.5.120-dev'
+	compile name: 'OpenModsLib-1.7.10-0.10-dev'
+	compile name: 'OpenBlocks-1.7.10-1.6-dev'
+	compile name: 'Thaumcraft-1.7.10-4.2.3.5-dev'
+	compile name: 'thaumicenergistics-1.1.2.0-dev'
+	compile name: 'ThermalDynamics-[1.7.10]1.2.1-172-dev'
+	compile name: 'worldedit-forge-mc1.7.10-6.0-beta-01'
+	compile name: 'ThermalFoundation-[1.7.10]1.2.6-118-dev'
+	compile name: 'industrialcraft-2-2.2.825-experimental-dev'
+	compile name: 'ForgeMultipart-1.7.10-1.2.0.347-dev'
+	compile name: 'ThermalExpansion-[1.7.10]4.1.5-248-dev'
+	compile name: 'magicalcrops-4.0.0_PUBLIC_BETA_5-dev'
+	//compile name: 'MicdoodleCore-1.7-3.0.12.502-dev'
+}
+
+processResources {
+    inputs.property "version", project.version
+    inputs.property "mcversion", project.minecraft.version
+
+    from("${project.projectDir}/../docs") {
+        include "mcmod.info"
+
+        expand "version": project.version, "mcversion": project.minecraft.version
+    }
+
+    from(sourceSets.main.resources.srcDirs) {
+        exclude "mcmod.info"
+    }
+}

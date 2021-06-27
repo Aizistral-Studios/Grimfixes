@@ -1,0 +1,7 @@
+rootProject.name = 'Fixworks'
+include(
+        'Fixworks-Core',
+        'Fixworks-MC1.7.10',
+        'Fixworks-MC1.12.2'
+)
+
