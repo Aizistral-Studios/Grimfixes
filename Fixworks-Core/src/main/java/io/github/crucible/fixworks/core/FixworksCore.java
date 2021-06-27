@@ -131,7 +131,9 @@ public class FixworksCore extends GrimmixController {
 
     @Override
     public void finish(IFinishLoadEvent event) {
-        // NO-OP
+        // Since they've done their work by now, release references and
+        // let Java's garbage collector consume their innocent souls
+        this.fixworks.clear();
     }
 
     private void scanOwnJar() throws Exception {
